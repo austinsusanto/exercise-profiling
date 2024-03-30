@@ -5,11 +5,10 @@ import com.advpro.profiling.tutorial.model.StudentCourse;
 import com.advpro.profiling.tutorial.repository.StudentCourseRepository;
 import com.advpro.profiling.tutorial.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author muhammad.khadafi
@@ -29,15 +28,10 @@ public class StudentService {
 
     public Optional<Student> findStudentWithHighestGpa() {
         List<Student> students = studentRepository.findAll();
-        Student highestGpaStudent = null;
-        double highestGpa = 0.0;
-        for (Student student : students) {
-            if (student.getGpa() > highestGpa) {
-                highestGpa = student.getGpa();
-                highestGpaStudent = student;
-            }
-        }
-        return Optional.ofNullable(highestGpaStudent);
+
+        students.sort(Comparator.comparing(Student::getGpa).thenComparing(Student::getName));
+
+        return Optional.ofNullable(students.get(0));
     }
 
     public String joinStudentNames() {
